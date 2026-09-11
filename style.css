@@ -290,7 +290,6 @@ button:disabled {
 }
 
 .section-desc {
-  max-width: 640px;
   margin: 0 0 1.2rem;
   color: #4b6994;
   font-size: 0.95rem;
@@ -337,19 +336,19 @@ button:disabled {
   flex-wrap: wrap;
   gap: 2rem;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 1rem;
 }
 
 .chain-wrap {
   display: flex;
   justify-content: center;
-  flex: 1 1 380px;
+  flex: 0 1 380px;
 }
 
 .chain-legend {
-  flex: 1 1 240px;
-  max-width: 300px;
+  flex: 0 1 400px;
+  max-width: 400px;
   text-align: left;
 }
 
@@ -379,32 +378,36 @@ button:disabled {
   cursor: pointer;
 }
 
-.chain-date-empty {
-  color: #4b6994;
-  font-size: 0.9rem;
-}
-
 .chain-date-row.selected {
   border-color: #33a6e3;
   background: #eaf6fd;
 }
 
+.chain-date-empty {
+  color: #4b6994;
+  font-size: 0.9rem;
+}
+
 .chain-date-week {
   flex: none;
-  width: 2.4rem;
+  width: 3rem;
+  white-space: nowrap;
   font-weight: 700;
   color: #1e4479;
   font-size: 0.85rem;
 }
 
-.chain-date-name {
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: #1e4479;
+.chain-date-name-select {
+  flex: 1 1 120px;
+  min-width: 120px;
+  border: 1px solid #d2dae4;
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+  font-family: "Inter", sans-serif;
   font-size: 0.9rem;
+  color: #1e4479;
+  background: #fff;
+  cursor: pointer;
 }
 
 .chain-date-input {
@@ -460,29 +463,6 @@ button:disabled {
   pointer-events: none;
 }
 
-.chain-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  margin: 1rem 0;
-}
-
-.chain-controls select {
-  padding: 0.5rem 0.8rem;
-  border: 1.5px solid #1e4479;
-  border-radius: 8px;
-  font-family: "Inter", sans-serif;
-  font-size: 0.95rem;
-  color: #1e4479;
-  background: #fff;
-}
-
-.chain-controls select:disabled {
-  opacity: 0.5;
-}
-
 .chain-io-note {
   margin: 0.8rem 0 0;
   color: #4b6994;
@@ -514,7 +494,6 @@ button:disabled {
   .settings-dialog,
   button,
   #import-data-input,
-  .chain-controls select,
   .chain-io-note,
   .powerbi-link-btn {
     display: none !important;

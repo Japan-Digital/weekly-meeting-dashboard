@@ -82,6 +82,50 @@
     return cols;
   }
 
+  function pad2(n) {
+    return n < 10 ? "0" + n : String(n);
+  }
+
+  function normalizeDateString(v) {
+    // Excel often "helpfully" reformats an ISO date string (2026-09-14) into
+    // its own locale format (9/14/2026, 14/09/2026, an Excel serial number…)
+    // when a CSV is edited and re-saved. <input type="date"> only accepts
+    // strict YYYY-MM-DD, so normalize whatever comes back on import.
+    if (!v) return "";
+    v = v.trim();
+
+    var iso = v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+    if (iso) return iso[1] + "-" + pad2(+iso[2]) + "-" + pad2(+iso[3]);
+
+    var slash = v.match(/^(\d{1,4})[/.](\d{1,2})[/.](\d{1,4})$/);
+    if (slash) {
+      var a = +slash[1],
+        b = +slash[2],
+        c = +slash[3];
+      if (String(a).length === 4) return a + "-" + pad2(b) + "-" + pad2(c); // YYYY/M/D
+      if (String(c).length === 4) {
+        // Ambiguous M/D/YYYY vs D/M/YYYY — assume US M/D/YYYY unless the
+        // first number can't be a month, in which case it must be the day.
+        return a > 12 ? c + "-" + pad2(b) + "-" + pad2(a) : c + "-" + pad2(a) + "-" + pad2(b);
+      }
+    }
+
+    // Excel serial date (days since 1899-12-30).
+    if (/^\d{4,6}$/.test(v)) {
+      var d = new Date(Date.UTC(1899, 11, 30) + Number(v) * 86400000);
+      if (!isNaN(d.getTime())) {
+        return d.getUTCFullYear() + "-" + pad2(d.getUTCMonth() + 1) + "-" + pad2(d.getUTCDate());
+      }
+    }
+
+    var parsed = new Date(v);
+    if (!isNaN(parsed.getTime())) {
+      return parsed.getFullYear() + "-" + pad2(parsed.getMonth() + 1) + "-" + pad2(parsed.getDate());
+    }
+
+    return ""; // Give up rather than store something that won't render.
+  }
+
   function parseData(text) {
     var lines = text.split(/\r\n|\n|\r/).filter(function (l) {
       return l.trim().length > 0;
@@ -109,7 +153,7 @@
       else if (type === "commission" && v1) commissions.push(v1);
       else if (type === "week") {
         var week = parseInt(v1, 10);
-        if (week) weekRows.push({ week: week, name: v2, date: v3 });
+        if (week) weekRows.push({ week: week, name: v2, date: normalizeDateString(v3) });
       }
     }
 

@@ -13,7 +13,6 @@
   ];
 
   var chainSvg = document.getElementById("chain-svg");
-  var chainSelect = document.getElementById("chain-name-select");
   var dateListEl = document.getElementById("chain-date-list");
 
   var SVG_NS = "http://www.w3.org/2000/svg";
@@ -108,25 +107,6 @@
     return "middle";
   }
 
-  function populateSelectOptions() {
-    while (chainSelect.options.length > 1) {
-      chainSelect.remove(1);
-    }
-    NAMES.forEach(function (name) {
-      var option = document.createElement("option");
-      option.value = name;
-      option.textContent = name;
-      chainSelect.appendChild(option);
-    });
-  }
-
-  function selectIndex(i) {
-    selectedIndex = i;
-    chainSelect.disabled = false;
-    chainSelect.value = chainState[selectedIndex] || "";
-    render();
-  }
-
   function renderChain() {
     while (chainSvg.firstChild) {
       chainSvg.removeChild(chainSvg.firstChild);
@@ -215,18 +195,31 @@
       weekSpan.className = "chain-date-week";
       weekSpan.textContent = "Wk " + (i + 1);
 
-      var nameSpan = document.createElement("span");
-      nameSpan.className = "chain-date-name";
-      nameSpan.textContent = chainState[i] || "—";
+      var nameSelect = document.createElement("select");
+      nameSelect.className = "chain-date-name-select";
+      nameSelect.setAttribute("data-index", String(i));
+
+      var blankOption = document.createElement("option");
+      blankOption.value = "";
+      blankOption.textContent = "—";
+      nameSelect.appendChild(blankOption);
+
+      NAMES.forEach(function (name) {
+        var option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        nameSelect.appendChild(option);
+      });
+      nameSelect.value = chainState[i] || "";
 
       var dateInput = document.createElement("input");
       dateInput.type = "date";
       dateInput.className = "chain-date-input";
       dateInput.setAttribute("data-index", String(i));
-      dateInput.value = chainDates[i];
+      dateInput.value = chainDates[i] || "";
 
       li.appendChild(weekSpan);
-      li.appendChild(nameSpan);
+      li.appendChild(nameSelect);
       li.appendChild(dateInput);
       dateListEl.appendChild(li);
     }
@@ -237,39 +230,52 @@
     renderDateList();
   }
 
+  function updateSelectionHighlight() {
+    // Toggle classes in place rather than a full render() so we don't tear
+    // down/rebuild the <select>/<input> the user may have just clicked into.
+    chainSvg.querySelectorAll(".chain-node").forEach(function (node) {
+      var idx = Number(node.getAttribute("data-index"));
+      node.classList.toggle("selected", idx === selectedIndex);
+    });
+    dateListEl.querySelectorAll(".chain-date-row").forEach(function (row) {
+      var idx = Number(row.getAttribute("data-index"));
+      row.classList.toggle("selected", idx === selectedIndex);
+    });
+  }
+
   function onChainClick(evt) {
     var g = evt.target.closest("[data-index]");
     if (!g) return;
-    selectIndex(Number(g.getAttribute("data-index")));
+    selectedIndex = Number(g.getAttribute("data-index"));
+    updateSelectionHighlight();
   }
 
-  function onSelectChange() {
-    if (selectedIndex < 0) return;
-    chainState[selectedIndex] = chainSelect.value;
-    saveToStorage();
-    render();
-  }
-
-  function onDateListClick(evt) {
-    if (evt.target.closest(".chain-date-input")) return;
+  function onDateListRowClick(evt) {
     var row = evt.target.closest("[data-index]");
     if (!row) return;
-    selectIndex(Number(row.getAttribute("data-index")));
+    selectedIndex = Number(row.getAttribute("data-index"));
+    updateSelectionHighlight();
   }
 
-  function onDateInputChange(evt) {
-    var input = evt.target.closest(".chain-date-input");
-    if (!input) return;
-    var idx = Number(input.getAttribute("data-index"));
-    chainDates[idx] = input.value;
-    saveToStorage();
-    renderChain(); // refresh SVG tooltips with the new date
+  function onDateListChange(evt) {
+    var target = evt.target;
+    var idx = Number(target.getAttribute("data-index"));
+    if (isNaN(idx)) return;
+
+    if (target.classList.contains("chain-date-input")) {
+      chainDates[idx] = target.value;
+      saveToStorage();
+      renderChain(); // refresh SVG tooltips with the new date
+    } else if (target.classList.contains("chain-date-name-select")) {
+      chainState[idx] = target.value;
+      saveToStorage();
+      renderChain(); // refresh the SVG node label + tooltip
+    }
   }
 
   chainSvg.addEventListener("click", onChainClick);
-  chainSelect.addEventListener("change", onSelectChange);
-  dateListEl.addEventListener("click", onDateListClick);
-  dateListEl.addEventListener("change", onDateInputChange);
+  dateListEl.addEventListener("click", onDateListRowClick);
+  dateListEl.addEventListener("change", onDateListChange);
 
   // Read by site-data.js so the master CSV export can include the current
   // presenter schedule alongside names/questions/audit items/commissions.
@@ -279,6 +285,5 @@
     },
   };
 
-  populateSelectOptions();
   render();
 })();
