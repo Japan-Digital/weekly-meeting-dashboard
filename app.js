@@ -47,6 +47,10 @@
   }
 
   function pickName() {
+    if (!NAMES.length) {
+      nameDisplay.textContent = "No names loaded — import data first";
+      return;
+    }
     var name = NAMES[Math.floor(Math.random() * NAMES.length)];
     nameDisplay.textContent = name;
   }
@@ -58,6 +62,14 @@
     var count = QUESTIONS.length;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (!count) {
+      ctx.fillStyle = "#4b6994";
+      ctx.font = "16px Inter, system-ui";
+      ctx.textAlign = "center";
+      ctx.fillText("Import data to load questions", cx, cy);
+      return;
+    }
 
     var segAngle = (Math.PI * 2) / count;
 
@@ -90,7 +102,7 @@
   }
 
   function spinWheel() {
-    if (spinning) return;
+    if (spinning || !QUESTIONS.length) return;
     spinning = true;
     spinBtn.disabled = true;
 
@@ -126,4 +138,55 @@
 
   drawWheel();
   startRotatingWord();
+})();
+
+(function () {
+  // Commission Excellence Audit — random pick with replacement, mirrors pickName().
+  var pickAuditBtn = document.getElementById("pick-audit-item-btn");
+  var auditDisplay = document.getElementById("audit-item-display");
+  var pickCommissionBtn = document.getElementById("pick-commission-btn");
+  var commissionDisplay = document.getElementById("commission-display");
+
+  function pickAuditItem() {
+    if (!AUDIT_ITEMS.length) {
+      auditDisplay.textContent = "No audit items loaded — import data first";
+      return;
+    }
+    auditDisplay.textContent =
+      AUDIT_ITEMS[Math.floor(Math.random() * AUDIT_ITEMS.length)];
+  }
+  function pickCommission() {
+    if (!COMMISSIONS.length) {
+      commissionDisplay.textContent = "No commissions loaded — import data first";
+      return;
+    }
+    commissionDisplay.textContent =
+      COMMISSIONS[Math.floor(Math.random() * COMMISSIONS.length)];
+  }
+
+  pickAuditBtn.addEventListener("click", pickAuditItem);
+  pickCommissionBtn.addEventListener("click", pickCommission);
+})();
+
+(function () {
+  // Utilisation Forecast Update — external Power BI link.
+  var powerbiLink = document.getElementById("powerbi-link");
+  if (!powerbiLink) return;
+  if (POWERBI_DASHBOARD_URL) {
+    powerbiLink.href = POWERBI_DASHBOARD_URL;
+  } else {
+    powerbiLink.href = "#";
+    powerbiLink.setAttribute("aria-disabled", "true");
+    powerbiLink.textContent = "No dashboard link set — import data first";
+  }
+})();
+
+(function () {
+  // Page-level PDF export via the browser print dialog (no PDF library dependency).
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) {
+    printBtn.addEventListener("click", function () {
+      window.print();
+    });
+  }
 })();

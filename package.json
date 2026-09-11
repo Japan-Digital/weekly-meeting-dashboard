@@ -1,8 +1,8 @@
 {
-  "name": "team-picker",
+  "name": "japan-digital-weekly",
   "version": "1.0.0",
   "private": true,
-  "description": "Local-hosted name picker + question wheel for team demos",
+  "description": "Local-hosted weekly meeting app for Japan Digital",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Team Picker</title>
+    <title>Japan Digital Weekly</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,44 +15,239 @@
   <body>
     <main>
       <header class="page-header">
+        <button
+          id="settings-btn"
+          class="settings-btn"
+          type="button"
+          aria-label="Open settings"
+          title="Settings"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+            ></path>
+          </svg>
+        </button>
         <img src="assets/logo.svg" alt="Turner &amp; Townsend" class="logo" />
         <h1>We <span id="rotating-word" class="rotating-word">transform</span> together.</h1>
-        <p>
-          Pick a name, then spin the wheel for their question.
-        </p>
       </header>
 
-      <section class="panels">
-        <article class="panel">
-          <h2>1. Pick a name</h2>
-          <div id="name-display" class="result-display" aria-live="polite">
-            —
+      <dialog id="settings-dialog" class="settings-dialog">
+        <form method="dialog" class="settings-form">
+          <div class="settings-header">
+            <h2>Settings</h2>
+            <button type="submit" class="settings-close" aria-label="Close settings">
+              ✕
+            </button>
           </div>
-          <button id="pick-name-btn" type="button">Pick a name</button>
-        </article>
 
-        <article class="panel">
-          <h2>2. Spin for a question</h2>
-          <div class="wheel-wrap">
-            <div class="wheel-pointer" aria-hidden="true"></div>
-            <canvas
-              id="wheel-canvas"
-              width="320"
-              height="320"
-              aria-hidden="true"
-            ></canvas>
+          <p class="settings-note">
+            Export/import everything — names, wheel questions, audit items,
+            commissions, the Power BI link, and the presenter schedule — as
+            one master CSV (editable in Excel), or edit the fields directly
+            below. Importing or saving reloads the page.
+          </p>
+
+          <div class="settings-actions">
+            <button id="export-data-btn" type="button">Export Data (CSV)</button>
+            <button id="import-data-btn" type="button">Import Data (CSV)</button>
+            <input
+              id="import-data-input"
+              type="file"
+              accept=".csv,text/csv"
+              hidden
+            />
+            <button id="print-btn" type="button">Export as PDF</button>
           </div>
-          <button id="spin-btn" type="button">Spin the wheel</button>
-          <div id="question-display" class="result-display" aria-live="polite">
-            —
+
+          <div class="settings-field">
+            <label for="settings-names">Names (one per line)</label>
+            <textarea id="settings-names" rows="6"></textarea>
           </div>
+
+          <div class="settings-field">
+            <label for="settings-questions">Wheel questions (one per line)</label>
+            <textarea id="settings-questions" rows="5"></textarea>
+          </div>
+
+          <div class="settings-field">
+            <label for="settings-powerbi">Power BI dashboard URL</label>
+            <input
+              id="settings-powerbi"
+              type="url"
+              placeholder="https://app.powerbi.com/…"
+            />
+          </div>
+
+          <div class="settings-field">
+            <label for="settings-audit">Audit items (one per line)</label>
+            <textarea id="settings-audit" rows="5"></textarea>
+          </div>
+
+          <div class="settings-field">
+            <label for="settings-commissions">Commissions (one per line)</label>
+            <textarea id="settings-commissions" rows="5"></textarea>
+          </div>
+
+          <div class="settings-save-row">
+            <button id="settings-save-btn" type="button">Save changes</button>
+          </div>
+        </form>
+      </dialog>
+
+      <section class="content-section" id="ground-rules">
+        <h2 class="section-title">Ground Rules</h2>
+        <article class="panel ground-rules-card">
+          <ul class="ground-rules-list">
+            <li>
+              <span class="rule-emoji" aria-hidden="true">🤝</span>
+              Whenever possible, attend in person.
+            </li>
+            <li>
+              <span class="rule-emoji" aria-hidden="true">🚫</span>
+              No laptops during the meeting unless you are presenting.
+            </li>
+            <li>
+              <span class="rule-emoji" aria-hidden="true">✅</span>
+              Come prepared, having completed your weekly activities and
+              updates before the meeting.
+            </li>
+          </ul>
         </article>
+      </section>
+
+      <section class="content-section" id="purposeful-moment">
+        <h2 class="section-title">Purposeful Moment</h2>
+        <p class="section-desc">
+          Each week, one team member shares something valuable with the
+          group — an idea, innovation, customer insight, lesson learned, or
+          industry update. This chain shows the presenter rotation.
+        </p>
+        <article class="panel chain-panel">
+          <div class="chain-layout">
+            <div class="chain-wrap">
+              <svg
+                id="chain-svg"
+                viewBox="0 0 380 380"
+                width="380"
+                height="380"
+                role="img"
+                aria-label="Presenter rotation chain"
+              ></svg>
+            </div>
+            <div class="chain-legend">
+              <h3 class="chain-legend-title">Week dates</h3>
+              <ul id="chain-date-list" class="chain-date-list"></ul>
+            </div>
+          </div>
+          <div class="chain-controls">
+            <label for="chain-name-select">Assign to selected week:</label>
+            <select id="chain-name-select" disabled>
+              <option value="">— select a node first —</option>
+            </select>
+          </div>
+          <p class="chain-io-note">
+            Included in the master CSV export/import (⚙️ Settings). Changes
+            here are also saved automatically in this browser.
+          </p>
+        </article>
+      </section>
+
+      <section class="content-section" id="utilisation-forecast">
+        <h2 class="section-title">
+          Utilisation Forecast Update (5 minutes per person)
+        </h2>
+        <p class="section-desc">
+          Brief updates from everyone: key priorities, blockers, risks, and
+          any support needed from the team.
+        </p>
+        <article class="panel">
+          <!-- TODO: swap POWERBI_DASHBOARD_URL in data.js for the real dashboard link -->
+          <a
+            id="powerbi-link"
+            class="powerbi-link-btn"
+            href="#"
+            target="_blank"
+            rel="noopener"
+            >Open Utilisation Forecast Dashboard</a
+          >
+        </article>
+      </section>
+
+      <section class="content-section" id="commission-audit">
+        <h2 class="section-title">Commission Excellence Audit</h2>
+        <p class="section-desc">
+          Random audit check, based on our Service Delivery Excellence model
+          (Naoki, Matt, Andrew).
+          <!-- Note: real SharePoint list integration isn't possible from a static
+               GitHub Pages site without a backend/auth bridge — Graph/SharePoint
+               REST both require OAuth credentials that can't be safely embedded
+               client-side. This is a manual random-pick placeholder for now. -->
+        </p>
+        <section class="panels">
+          <article class="panel">
+            <h3>1. Pick an audit item</h3>
+            <div id="audit-item-display" class="result-display" aria-live="polite">
+              —
+            </div>
+            <button id="pick-audit-item-btn" type="button">
+              Pick an audit item
+            </button>
+          </article>
+
+          <article class="panel">
+            <h3>2. Pick a commission</h3>
+            <div id="commission-display" class="result-display" aria-live="polite">
+              —
+            </div>
+            <button id="pick-commission-btn" type="button">
+              Pick a commission
+            </button>
+          </article>
+        </section>
+      </section>
+
+      <section class="content-section" id="wheel-section">
+        <h2 class="section-title">We WHEEL Together</h2>
+        <p class="section-desc">
+          Pick a name, then spin the wheel for their question.
+        </p>
+        <section class="panels">
+          <article class="panel">
+            <h3>1. Pick a name</h3>
+            <div id="name-display" class="result-display" aria-live="polite">
+              —
+            </div>
+            <button id="pick-name-btn" type="button">Pick a name</button>
+          </article>
+
+          <article class="panel">
+            <h3>2. Spin for a question</h3>
+            <div class="wheel-wrap">
+              <div class="wheel-pointer" aria-hidden="true"></div>
+              <canvas
+                id="wheel-canvas"
+                width="320"
+                height="320"
+                aria-hidden="true"
+              ></canvas>
+            </div>
+            <button id="spin-btn" type="button">Spin the wheel</button>
+            <div id="question-display" class="result-display" aria-live="polite">
+              —
+            </div>
+          </article>
+        </section>
       </section>
 
       <footer class="page-footer">Built by Keith Ng</footer>
     </main>
 
     <script src="data.js"></script>
+    <script src="site-data.js"></script>
+    <script src="settings.js"></script>
+    <script src="chain.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
