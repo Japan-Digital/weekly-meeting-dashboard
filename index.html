@@ -30,28 +30,40 @@
           </svg>
         </button>
         <img src="assets/logo.svg" alt="Turner &amp; Townsend" class="logo" />
-        <h1>We <span id="rotating-word" class="rotating-word">transform</span> together.</h1>
+        <h1>
+          We
+          <span id="rotating-word" class="rotating-word">transform</span>
+          together.
+        </h1>
       </header>
 
       <dialog id="settings-dialog" class="settings-dialog">
         <form method="dialog" class="settings-form">
           <div class="settings-header">
             <h2>Settings</h2>
-            <button type="submit" class="settings-close" aria-label="Close settings">
+            <button
+              type="submit"
+              class="settings-close"
+              aria-label="Close settings"
+            >
               ✕
             </button>
           </div>
 
           <p class="settings-note">
             Export/import everything — names, wheel questions, audit items,
-            commissions, the Power BI link, and the presenter schedule — as
-            one master CSV (editable in Excel), or edit the fields directly
-            below. Importing or saving reloads the page.
+            commissions, the Power BI link, and the presenter schedule — as one
+            master CSV (editable in Excel), or edit the fields directly below.
+            Importing or saving reloads the page.
           </p>
 
           <div class="settings-actions">
-            <button id="export-data-btn" type="button">Export Data (CSV)</button>
-            <button id="import-data-btn" type="button">Import Data (CSV)</button>
+            <button id="export-data-btn" type="button">
+              Export Data (CSV)
+            </button>
+            <button id="import-data-btn" type="button">
+              Import Data (CSV)
+            </button>
             <input
               id="import-data-input"
               type="file"
@@ -67,7 +79,9 @@
           </div>
 
           <div class="settings-field">
-            <label for="settings-questions">Wheel questions (one per line)</label>
+            <label for="settings-questions"
+              >Wheel questions (one per line)</label
+            >
             <textarea id="settings-questions" rows="5"></textarea>
           </div>
 
@@ -110,8 +124,8 @@
             </li>
             <li>
               <span class="rule-emoji" aria-hidden="true">✅</span>
-              Come prepared, having completed your weekly activities and
-              updates before the meeting.
+              Come prepared, having completed your weekly activities and updates
+              before the meeting.
             </li>
           </ul>
         </article>
@@ -120,9 +134,9 @@
       <section class="content-section" id="purposeful-moment">
         <h2 class="section-title">Purposeful Moment</h2>
         <p class="section-desc">
-          Each week, one team member shares something valuable with the
-          group — an idea, innovation, customer insight, lesson learned, or
-          industry update. This chain shows the presenter rotation.
+          Each week, one team member shares something valuable with the group —
+          an idea, innovation, customer insight, lesson learned, or industry
+          update. This chain shows the presenter rotation.
         </p>
         <article class="panel chain-panel">
           <div class="chain-layout">
@@ -142,8 +156,8 @@
             </div>
           </div>
           <p class="chain-io-note">
-            Included in the master CSV export/import (⚙️ Settings). Changes
-            here are also saved automatically in this browser.
+            Included in the master CSV export/import (⚙️ Settings). Changes here
+            are also saved automatically in this browser.
           </p>
         </article>
       </section>
@@ -153,8 +167,8 @@
           Utilisation Forecast Update (5 minutes per person)
         </h2>
         <p class="section-desc">
-          Brief updates from everyone: key priorities, blockers, risks, and
-          any support needed from the team.
+          Brief updates from everyone: key priorities, blockers, risks, and any
+          support needed from the team.
         </p>
         <article class="panel">
           <!-- TODO: swap POWERBI_DASHBOARD_URL in data.js for the real dashboard link -->
@@ -182,7 +196,11 @@
         <section class="panels">
           <article class="panel">
             <h3>1. Pick an audit item</h3>
-            <div id="audit-item-display" class="result-display" aria-live="polite">
+            <div
+              id="audit-item-display"
+              class="result-display"
+              aria-live="polite"
+            >
               —
             </div>
             <button id="pick-audit-item-btn" type="button">
@@ -192,7 +210,11 @@
 
           <article class="panel">
             <h3>2. Pick a commission</h3>
-            <div id="commission-display" class="result-display" aria-live="polite">
+            <div
+              id="commission-display"
+              class="result-display"
+              aria-live="polite"
+            >
               —
             </div>
             <button id="pick-commission-btn" type="button">
@@ -228,14 +250,20 @@
               ></canvas>
             </div>
             <button id="spin-btn" type="button">Spin the wheel</button>
-            <div id="question-display" class="result-display" aria-live="polite">
+            <div
+              id="question-display"
+              class="result-display"
+              aria-live="polite"
+            >
               —
             </div>
           </article>
         </section>
       </section>
 
-      <footer class="page-footer">Built by Keith Ng</footer>
+      <footer class="page-footer">
+        Built by Turner & Townsend Japan Digital Team
+      </footer>
     </main>
 
     <script src="data.js"></script>
